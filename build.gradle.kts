@@ -30,7 +30,7 @@ application {
 tasks.register<Jar>("fatJar") {
     group = "build"
     manifest {
-        attributes["Main-Class"] = "App" // or your full class name with package
+        attributes["Main-Class"] = "org.hospitalmanagement.Main"
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
@@ -43,5 +43,5 @@ tasks.register<Jar>("fatJar") {
             .map { zipTree(it) }
     })
 
-    archiveClassifier.set("all") // output will be yourapp-all.jar
+    archiveClassifier.set("all")
 }
