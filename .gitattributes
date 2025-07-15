@@ -2,3 +2,5 @@
 *.css linguist-detectable=false
 *.js linguist-detectable=false
 *.java linguist-language=Java
+gradlew linguist-detectable=false
+gradlew.bat linguist-detectable=false
