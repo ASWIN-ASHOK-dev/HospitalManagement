@@ -65,11 +65,11 @@ This project reflects:
    -open up the powershell(on windows),bash(on Linux)
    ```bash
    git clone https://github.com/hospitalmanagement.git
-   cd hospitalmanagement```
+   cd hospitalmanagement
 3. **Run the jar file provided(JAVA should be installed and this **jar file should be used exactly**)
   -type this command on the Command Line Interface(CLI)
    ```bash
-   java -jar build/libs/HospitalDB-1.0-SNAPSHOT-all.jar```
+   java -jar build/libs/HospitalDB-1.0-SNAPSHOT-all.jar
 
 ## For Feedback or Collaboration
 
