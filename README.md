@@ -62,10 +62,17 @@ This project reflects:
 ## 🛠️ Setup Instructions
 
 1. **Clone the repository**
-   open up the powershell(on windows),bash(on Linux)
-   git clone https://github.com/yourusername/hospitalmanagement.git
-   cd hospitalmanagement
-2.Run the jar file provided(JAVA should be installed and this jar file should be used exactly)
-  type this command on the Command Line Interface(CLI)
-  java -jar build/libs/HospitalDB-1.0-SNAPSHOT-all.jar
-   
+   -open up the powershell(on windows),bash(on Linux)
+   '''bash
+   git clone https://github.com/hospitalmanagement.git
+   cd hospitalmanagement'''
+3. **Run the jar file provided(JAVA should be installed and this **jar file should be used exactly**)
+  -type this command on the Command Line Interface(CLI)
+   '''bash
+   java -jar build/libs/HospitalDB-1.0-SNAPSHOT-all.jar'''
+
+## For Feedback or Collaboration
+
+Feel free to explore more of my work or reach out via GitHub:
+
+[github.com/ASWIN-ASHOK-dev](https://github.com/ASWIN-ASHOK-dev)
