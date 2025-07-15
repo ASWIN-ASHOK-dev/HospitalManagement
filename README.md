@@ -76,3 +76,6 @@ This project reflects:
 Feel free to explore more of my work or reach out via GitHub:
 
 [github.com/ASWIN-ASHOK-dev](https://github.com/ASWIN-ASHOK-dev)
+> Note: The `build/` folder and `.jar` file are included for demonstration purposes.  
+> In real-world production code, these would be excluded via `.gitignore` and generated as needed using Gradle.
+
