@@ -75,8 +75,8 @@ This project reflects:
    create database JAVA
    mysqldump -u yourusername -p "JAVA" < mysqlfiles/hospitaldb.sql
 ```
-   > Note: Powershell should not be used to run the mysqldump command as it does not support ">" character
-   > Alternatives: windows users can again open cmd in that folder and do that command or use bash(git bash or wsl)
+   > Note: Powershell should not be used to run the mysqldump command as it does not support ">" character.
+   > Alternatives: windows users can again open cmd in that folder and do that command or use bash(git bash or wsl).
 3. **Run the jar file provided(JAVA should be installed and this **jar file should be used exactly**)
   -type this command on the Command Line Interface(CLI)
    ```bash
