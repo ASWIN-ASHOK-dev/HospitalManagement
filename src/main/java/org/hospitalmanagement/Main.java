@@ -23,7 +23,6 @@ class SHA256HASH {
                 hexString.append(hex);
             }
             hashedtext = hexString.toString();
-            System.out.println(hashedtext);
         }
         catch (NoSuchAlgorithmException e) {
             System.out.println("No Algorithm Found"+e);
@@ -36,6 +35,9 @@ class SQLconnection {
     private String password;
     private String databaseurl;
     private Connection conn;
+    private String accessLevel;
+    private List<String> commandlist = new ArrayList<String>();
+    private int lastUser;
 
     SQLconnection(String username, String password, String database) {
         System.out.println("SQL connection initiated");
@@ -58,7 +60,7 @@ class SQLconnection {
         }
     }
 
-    List<HashMap<String, String>> execute(String command) {
+    List<HashMap<String, String>> executeReturn(String command) {
         List<HashMap<String, String>> executionResult = new ArrayList<HashMap<String, String>>();
         try {
             Statement stmt = conn.createStatement();
@@ -81,6 +83,15 @@ class SQLconnection {
         }
         return executionResult;
     }
+    void executeOnly(String command){
+        try{
+        Statement stmt = conn.createStatement();
+        stmt.execute(command);
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
     String inputtaker(){
         String userinput;
         Scanner authenticationscanner = new Scanner(System.in);
@@ -90,28 +101,66 @@ class SQLconnection {
         }
         return userinput;
     }
+    String inputtaker(String print){
+        System.out.print(print + " -> " );
+        String userinput;
+        Scanner authenticationscanner = new Scanner(System.in);
+        userinput = authenticationscanner.nextLine();
+        if(userinput.equalsIgnoreCase("q")){
+            authenticationRequest();
+        }
+        return userinput;
+    }
+    void userHandling() {
+        System.out.println("Logged in,type h for commands");
+        while(true){
+            System.out.print("Enter a command");
+            String adminInput = inputtaker();
+            if(adminInput.equalsIgnoreCase("l")) {
+                authenticationRequest();
+            }
+            else if (adminInput.equalsIgnoreCase("n")) {
+                if(accessLevel.equalsIgnoreCase("Full") || accessLevel.contains("W")){
+                    createUser();
+                }
+                else {
+                    System.out.println("Command not permitted");
+                }
+            }
+            else if (adminInput.equalsIgnoreCase("h")) {
+                    addCommand("l","logout","Everyone");
+                    addCommand("n","newuser","Full/R/W");
+                    helpPrint();
+            }
+            else {
+                System.out.println("Wrong command,type h for command list");
+            }
+        }
+
+    }
     void authenticationRequest() {
         while (true){
-            String username;
             String  userid="";
             String password;
+            accessLevel="nil";
             System.out.print("Enter your username -> ");
             boolean registeredUser = false;
             boolean authenticationSuccess=false;
             username = inputtaker();
             if (!username.isBlank()) {
-                for (HashMap<String, String> user : execute("select * from userdetails;")) {
+                for (HashMap<String, String> user : executeReturn("select * from userdetails;")) {
                     if (user.get("Name").equalsIgnoreCase(username)) {
                         username = user.get("Name");
                         userid = user.get("id");
                         registeredUser = true;
+                        accessLevel = user.get("Accesslevel");
                         break;
                     }
                 }
                 if(registeredUser){
                     System.out.printf("Welcome %s (id -> %s) %n",username,userid);
                     String storedHashedPassword;
-                    List<HashMap<String, String>> a = execute("select password from userdetails where id ="+ userid);
+                    List<HashMap<String, String>> a = executeReturn("select password from userdetails where id ="+ userid);
                     storedHashedPassword =a.getFirst().get("password");
                     if(storedHashedPassword!=null){
                         Console console = System.console();
@@ -139,8 +188,39 @@ class SQLconnection {
             else{
                 System.out.println("please type a username");
             }
-            if(authenticationSuccess) break;
+            if(authenticationSuccess) {
+                System.out.println("Your Access Level is "+accessLevel);
+                break;
+            }
         }
+    }
+
+    //Methods
+    void createUser(){
+        String username;
+        String password = "";
+        String department;
+        String accesslevel;
+        System.out.println("------USER CREATION MODE-----");
+        System.out.println("press q to log out");
+        username = inputtaker("Enter the username");
+        password = inputtaker("Enter the password");
+        department = inputtaker("Enter the Department");
+        accesslevel = inputtaker("Enter Access level W/R/Nil/Full");
+        inputtaker(String.format("you are about to add a user %n Name:%s,Department:%s,Access level:%s,Password:%s %n Press enter to continue,q to logout",username,department,accesslevel,password));
+        SHA256HASH hashedpassword = new SHA256HASH(password);
+        password =  hashedpassword.returnHash();
+        lastUser = Integer.parseInt(executeReturn("select id from userdetails").getLast().get("id"));
+        String sqlcommand = String.format("insert into userdetails(id,Name,Department,Accesslevel,password) values ('%s','%s','%s','%s','%s');",lastUser + 1,username,department,accesslevel,password);
+        executeOnly(sqlcommand);
+    }
+    void helpPrint() {
+        for(int i = 0;i < commandlist.size();i++){
+            System.out.println("Sl No. "+Integer.toString(i + 1)+ " " + commandlist.get(i));
+        }
+    }
+    void addCommand(String letter,String use,String accessLevel){
+        commandlist.add(" --> command letter --> "+letter + " --> use -->" + use + " --> accesslevel --> " + accessLevel);
     }
 }
 class Info{
@@ -154,6 +234,7 @@ class Main{
         System.out.println("Welcome to Hospital Management System of " + Info.hospitalName);
         System.out.println("----------------------------------------------");
         sqlConnection.authenticationRequest();
+        sqlConnection.userHandling();
     }
 }
 
