@@ -67,14 +67,14 @@ This project reflects:
    git clone https://github.com/hospitalmanagement.git
    cd hospitalmanagement
    ```
-2.**Take sample database to mysql(mysql should be installed)**
+2. **Take sample database to mysql(mysql should be installed)**
    ***Replace yourusername with username entered when installed mysql***
    ***If you have a password also enter it when prompted***
    ```bash
    mysql - u yourusername -p
    create database JAVA
-   mysqldump -u yourusername -p "JAVA" < mysqlfiles/hospitaldb.sql
-```
+   mysqldump -u yourusername -p "JAVA" < mysqlfiles/hospitaldb.sql   
+   ```
    > Note: Powershell should not be used to run the mysqldump command as it does not support ">" character.
    > Alternatives: windows users can again open cmd in that folder and do that command or use bash(git bash or wsl).
 3. **Run the jar file provided(JAVA should be installed and this **jar file should be used exactly**)
