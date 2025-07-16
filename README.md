@@ -68,8 +68,9 @@ This project reflects:
    cd hospitalmanagement
    ```
 2. **Take sample database to mysql(mysql should be installed with aswin as a user with password "psupsc")**
-   **Also enter "psupsc" as the password when prompted*,this sql uses hashing to protect its passwords admin is the full privilaged username and its password is "ak".*
-3. ```bash
+   *Also enter "psupsc" as the password when prompted*
+   > Note:This sql uses hashing to protect its passwords,admin is the full privilaged username and its password is "ak".*
+4. ```bash
    mysql - u aswin -p
    create database JAVA
    mysqldump -u yourusername -p "JAVA" < mysqlfiles/hospitaldb.sql   
