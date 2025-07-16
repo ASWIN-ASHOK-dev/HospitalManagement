@@ -27,7 +27,7 @@ tasks.jar {
 application {
     mainClass.set("org.hospitalmanagement.Main")
 }
-tasks.register<Jar>("fatJar") {
+tasks.register<Jar>("compileall") {
     group = "build"
     manifest {
         attributes["Main-Class"] = "org.hospitalmanagement.Main"
