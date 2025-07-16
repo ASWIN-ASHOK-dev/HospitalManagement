@@ -66,11 +66,21 @@ This project reflects:
    ```bash
    git clone https://github.com/hospitalmanagement.git
    cd hospitalmanagement
-3. **Run the jar file provided(JAVA should be installed and this **jar file should be used exactly**)
+   ```
+2. **Take sample database to mysql(mysql should be installed with aswin as a user with password "psupsc")**
+   **Also enter "psupsc" as the password when prompted*,this sql uses hashing to protect its passwords admin is the full privilaged username and its password is "ak".*
+3. ```bash
+   mysql - u aswin -p
+   create database JAVA
+   mysqldump -u yourusername -p "JAVA" < mysqlfiles/hospitaldb.sql   
+   ```
+   > Note: Powershell should not be used to run the mysqldump command as it does not support ">" character.
+   > Alternatives: windows users can again open cmd in that folder and do that command or use bash(git bash or wsl).
+3. **Run the jar file provided(JAVA should be installed and this **jar file should be used exactly**)**
   -type this command on the Command Line Interface(CLI)
    ```bash
    java -jar build/libs/HospitalDB-1.0-SNAPSHOT-all.jar
-
+   ```
 ## For Feedback or Collaboration
 
 Feel free to explore more of my work or reach out via GitHub:
