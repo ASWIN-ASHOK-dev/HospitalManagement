@@ -36,7 +36,7 @@ class SQLconnection {
     private String databaseurl;
     private Connection conn;
     private String accessLevel;
-    private List<String> commandlist = new ArrayList<String>();
+    private List<String> commandlistAdmin = new ArrayList<String>();
     private int lastUser;
 
     SQLconnection(String username, String password, String database) {
@@ -85,8 +85,8 @@ class SQLconnection {
     }
     void executeOnly(String command){
         try{
-        Statement stmt = conn.createStatement();
-        stmt.execute(command);
+            Statement stmt = conn.createStatement();
+            stmt.execute(command);
         }
         catch (SQLException e) {
             System.out.println(e);
@@ -114,31 +114,29 @@ class SQLconnection {
     void userHandling() {
         System.out.println("Logged in,type h for commands");
         while(true){
-            System.out.print("Enter a command");
-            String adminInput = inputtaker();
-            if(adminInput.equalsIgnoreCase("l")) {
-                authenticationRequest();
-            }
-            else if (adminInput.equalsIgnoreCase("n")) {
-                if(accessLevel.equalsIgnoreCase("Full") || accessLevel.contains("W")){
+            //ADMIN HANDLING
+            if(accessLevel.equalsIgnoreCase("Full")) {
+                System.out.print("Enter a command");
+                String adminInput = inputtaker();
+                if (adminInput.equalsIgnoreCase("l")) {
+                    authenticationRequest();
+                } else if (adminInput.equalsIgnoreCase("n")) {
                     createUser();
+                } else if (adminInput.equalsIgnoreCase("s")) {
+                    searchUser();
+                } else if (adminInput.equalsIgnoreCase("h")) {
+                    addAdminCommand("l", "logout");
+                    addAdminCommand("nu", "newuser");
+                    addAdminCommand("su", "search");
+                    helpAdminPrint();
+                } else {
+                    System.out.println("Wrong command,type h for command list");
                 }
-                else {
-                    System.out.println("Command not permitted");
-                }
-            }
-            else if (adminInput.equalsIgnoreCase("h")) {
-                    addCommand("l","logout","Everyone");
-                    addCommand("n","newuser","Full/R/W");
-                    helpPrint();
-            }
-            else {
-                System.out.println("Wrong command,type h for command list");
             }
         }
 
     }
-    void authenticationRequest() {
+    void authenticationRequest(){
         while (true){
             String  userid="";
             String password;
@@ -194,7 +192,15 @@ class SQLconnection {
             }
         }
     }
-
+    String returncondition(HashMap<String,String> conditionlist){
+        List<String> conditionCommand=new ArrayList<>();
+        for (Map.Entry<String,String> condition: conditionlist.entrySet()){
+            if(!condition.getValue().isBlank()){
+                conditionCommand.add(String.format("%s = '%s'",condition.getKey(),condition.getValue()));
+            }
+        }
+        return String.join("AND ",conditionCommand);
+    }
     //Methods
     void createUser(){
         String username;
@@ -214,13 +220,40 @@ class SQLconnection {
         String sqlcommand = String.format("insert into userdetails(id,Name,Department,Accesslevel,password) values ('%s','%s','%s','%s','%s');",lastUser + 1,username,department,accesslevel,password);
         executeOnly(sqlcommand);
     }
-    void helpPrint() {
-        for(int i = 0;i < commandlist.size();i++){
-            System.out.println("Sl No. "+Integer.toString(i + 1)+ " " + commandlist.get(i));
+    void searchUser(){
+        System.out.println("------USER SEARCH MODE-----");
+        HashMap<String,String> conditionList= new HashMap<String,String>();
+        System.out.println("press q to log out, leave blank if not needed to search based on that");
+        conditionList.put("id",inputtaker("Enter the userid"));
+        conditionList.put("Name",inputtaker("Enter the name").toUpperCase());
+        conditionList.put("Department",inputtaker("Enter the Department").toUpperCase());
+        conditionList.put("Accesslevel",inputtaker("Enter Access level W/R/Nil/Full").toUpperCase());
+        String condition = returncondition(conditionList);
+        List<HashMap<String,String>> output;
+        if (condition.isEmpty()){
+            output = executeReturn("select * from userdetails;");
+        }
+        else {
+            output = executeReturn("select * from userdetails where " + condition);
+        }
+        System.out.println("Search Results");
+        for(HashMap individualoutput : output)
+        {
+            StringBuilder finaloutput = new StringBuilder();
+            finaloutput.append("id = " + individualoutput.get("id"));
+            finaloutput.append(" -- Name = " + individualoutput.get("Name"));
+            finaloutput.append(" -- Department = " + individualoutput.get("Department"));
+            System.out.println(finaloutput);
+
         }
     }
-    void addCommand(String letter,String use,String accessLevel){
-        commandlist.add(" --> command letter --> "+letter + " --> use -->" + use + " --> accesslevel --> " + accessLevel);
+    void helpAdminPrint() {
+        for(int i = 0;i < commandlistAdmin.size();i++){
+            System.out.println("Sl No. "+Integer.toString(i + 1)+ " " + commandlistAdmin.get(i));
+        }
+    }
+    void addAdminCommand(String letter,String use){
+        commandlistAdmin.add(" --> command letter --> "+letter + " --> use -->" + use);
     }
 }
 class Info{
