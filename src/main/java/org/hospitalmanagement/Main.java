@@ -92,7 +92,7 @@ class SQLconnection {
             System.out.println(e);
         }
     }
-    String inputtaker(){
+    static String inputtaker(){
         String userinput;
         Scanner authenticationscanner = new Scanner(System.in);
         userinput = authenticationscanner.nextLine();
@@ -117,20 +117,22 @@ class SQLconnection {
             //ADMIN HANDLING
             if(accessLevel.equalsIgnoreCase("Full")) {
                 System.out.print("Enter a command");
-                String adminInput = inputtaker();
-                if (adminInput.equalsIgnoreCase("l")) {
-                    authenticationRequest();
-                } else if (adminInput.equalsIgnoreCase("n")) {
-                    createUser();
-                } else if (adminInput.equalsIgnoreCase("s")) {
-                    searchUser();
-                } else if (adminInput.equalsIgnoreCase("h")) {
-                    addAdminCommand("l", "logout");
-                    addAdminCommand("nu", "newuser");
-                    addAdminCommand("su", "search");
-                    helpAdminPrint();
-                } else {
-                    System.out.println("Wrong command,type h for command list");
+                String adminInput = inputtaker().toLowerCase();
+                switch (adminInput){
+                    case "l":
+                        authenticationRequest();
+                        break;
+                    case "n":
+                        createUser();
+                    case "s":
+                        searchUser();
+                    case "h":
+                        addAdminCommand("l", "logout ");
+                        addAdminCommand("nu", "newuser");
+                        addAdminCommand("su", "search");
+                        helpAdminPrint();
+                    default:
+                        System.out.println("Wrong command,type h for command list");
                 }
             }
         }
@@ -257,11 +259,10 @@ class SQLconnection {
     }
 }
 class Info{
-    static String hospitalName;
+    static final String hospitalName = "AK Hospital";
 }
 class Main{
     public static void main(String[] args){
-        Info.hospitalName = "AK Hospital";
         SQLconnection sqlConnection = new SQLconnection("aswin","psupsc","JAVA");
         sqlConnection.Connect();
         System.out.println("Welcome to Hospital Management System of " + Info.hospitalName);
