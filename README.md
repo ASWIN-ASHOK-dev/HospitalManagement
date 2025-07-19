@@ -43,6 +43,7 @@ It demonstrates how core concepts of **Java OOP**, such as **Encapsulation**, **
 - Managing builds and dependencies using **Gradle**
 - Writing maintainable, modular, and extensible code
 - Understanding how real-world systems map into code
+- Shell Scripting for automating git commits,etc
 
 ---
 
