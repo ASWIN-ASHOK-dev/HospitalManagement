@@ -107,6 +107,7 @@ class SQLconnection {
         Scanner authenticationscanner = new Scanner(System.in);
         userinput = authenticationscanner.nextLine();
         if(userinput.equalsIgnoreCase("q")){
+            System.out.println("Logged Out Successfully");
             authenticationRequest();
         }
         return userinput;
@@ -116,21 +117,23 @@ class SQLconnection {
         while(true){
             //ADMIN HANDLING
             if(accessLevel.equalsIgnoreCase("Full")) {
-                System.out.print("Enter a command");
-                String adminInput = inputtaker().toLowerCase();
+                String adminInput = inputtaker("Enter a command").toLowerCase();
                 switch (adminInput){
                     case "l":
                         authenticationRequest();
                         break;
                     case "n":
                         createUser();
+                        break;
                     case "s":
                         searchUser();
+                        break;
                     case "h":
-                        addAdminCommand("l", "logout ");
-                        addAdminCommand("nu", "newuser");
-                        addAdminCommand("su", "search");
+                        addAdminCommand("l", "logout");
+                        addAdminCommand("n", "newuser");
+                        addAdminCommand("s", "search");
                         helpAdminPrint();
+                        break;
                     default:
                         System.out.println("Wrong command,type h for command list");
                 }
