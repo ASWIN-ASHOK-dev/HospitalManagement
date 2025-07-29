@@ -47,6 +47,7 @@ class SQLconnection {
     private Connection conn;
     private String accessLevel;
     private List<String> commandlistAdmin = new ArrayList<String>();
+    private static Scanner authenticationscanner = new Scanner(System.in);
     private int lastUser;
 
     SQLconnection(String username, String password, String database) {
@@ -111,8 +112,7 @@ class SQLconnection {
     static String inputtaker(){
         //First function in input taker here,we exits the program when q is typed
         String userinput;
-        Scanner authenticationscanner = new Scanner(System.in);
-        userinput = authenticationscanner.nextLine();
+        userinput = authenticationscanner.next();
         if(userinput.equalsIgnoreCase("q")){
             System.exit(0);
         }
@@ -120,10 +120,9 @@ class SQLconnection {
     }
     String inputtaker(String print){
         //Second function in input taker here,we log out the user when q is typed
-        System.out.print(print + " -> " );
+        System.out.print(print + " -> ");
         String userinput;
-        Scanner authenticationscanner = new Scanner(System.in);
-        userinput = authenticationscanner.nextLine();
+        userinput = authenticationscanner.next();
         if(userinput.equalsIgnoreCase("q")){
             System.out.println("Logged Out Successfully");
             authenticationRequest();
@@ -133,7 +132,9 @@ class SQLconnection {
     void userHandling() {
         //We use this function to check for user inputs and perform commands accordingly
         System.out.println("Logged in,type h for commands");
+        int a = 0;
         while(true){
+            a += 1;
             //ADMIN HANDLING
             if(accessLevel.equalsIgnoreCase("Full")) {
                 String adminInput = inputtaker("Enter a command").toLowerCase();
@@ -153,9 +154,8 @@ class SQLconnection {
                         addAdminCommand("s", "search");
                         helpAdminPrint();
                         break;
-                    default:
-                        System.out.println("Wrong command,type h for command list");
                 }
+                System.out.println(a);
             }
         }
 
@@ -188,11 +188,9 @@ class SQLconnection {
                     storedHashedPassword =a.getFirst().get("password");
                     if(storedHashedPassword!=null){
                         Console console = System.console();
-
                         SHA256HASH hash = new SHA256HASH(String.valueOf(console.readPassword("Enter you password,not visible because of security issues")));
                         if (hash.returnHash().equals(storedHashedPassword)){
                             System.out.println("Password Correct");
-                            System.out.println("Authentication Completed Successfully");
                             authenticationSuccess = true;
                         }
                         else {
@@ -213,8 +211,10 @@ class SQLconnection {
                 System.out.println("please type a username");
             }
             if(authenticationSuccess) {
+                //Authentication complete
                 System.out.println("Your Access Level is "+accessLevel);
-                break;
+                System.out.println("Authentication Completed Successfully");
+                userHandling();
             }
         }
     }
@@ -295,7 +295,6 @@ class Main{
         System.out.println("Welcome to Hospital Management System of " + Info.hospitalName);
         System.out.println("----------------------------------------------");
         sqlConnection.authenticationRequest();
-        sqlConnection.userHandling();
     }
 }
 
