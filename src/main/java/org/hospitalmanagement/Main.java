@@ -1,3 +1,12 @@
+//A project to learn more about JAVA and OOPS
+// Learn more about me in my github profile - www.github.com/ASWIN-ASHOK-dev
+/*
+The Parameters used in this project are
+username = aswin
+password = psupsc
+database = JAVA
+*/
+
 package org.hospitalmanagement;
 
 //import statements
@@ -8,6 +17,7 @@ import java.sql.*;
 import java.util.*;
 
 class SHA256HASH {
+    //A class used to hash a string to SHA256 value
     private String hashedtext;
     SHA256HASH(String wordToHash) {
         this.hashedtext = wordToHash;
@@ -40,6 +50,7 @@ class SQLconnection {
     private int lastUser;
 
     SQLconnection(String username, String password, String database) {
+        //Constructor that uses usernmae,passord,database name and set it to the class variables.
         System.out.println("SQL connection initiated");
         this.username = username;
         this.password = password;
@@ -47,10 +58,13 @@ class SQLconnection {
     }
 
     SQLconnection() {
+        //Constructor that informs developer to provide neccesary details
         System.out.println("Please provide username, password and database name");
     }
 
     void Connect() {
+        //use driver manager and connect to mysql server
+        //Execption handling is mandatory here
         try {
             conn = DriverManager.getConnection(databaseurl, username, password);
             System.out.println("Connected to DB");
@@ -92,7 +106,10 @@ class SQLconnection {
             System.out.println(e);
         }
     }
+    //In the following two function we use the OOP priciple polymorphism.
+    // Here we does this becuase we want to use OOPS priciple more,learn different use cases and accomodate more things easily.
     static String inputtaker(){
+        //First function in input taker here,we exits the program when q is typed
         String userinput;
         Scanner authenticationscanner = new Scanner(System.in);
         userinput = authenticationscanner.nextLine();
@@ -102,6 +119,7 @@ class SQLconnection {
         return userinput;
     }
     String inputtaker(String print){
+        //Second function in input taker here,we log out the user when q is typed
         System.out.print(print + " -> " );
         String userinput;
         Scanner authenticationscanner = new Scanner(System.in);
@@ -113,6 +131,7 @@ class SQLconnection {
         return userinput;
     }
     void userHandling() {
+        //We use this function to check for user inputs and perform commands accordingly
         System.out.println("Logged in,type h for commands");
         while(true){
             //ADMIN HANDLING
@@ -142,6 +161,8 @@ class SQLconnection {
 
     }
     void authenticationRequest(){
+        //Here we break the loop only when we authenticate the user or the user types "q"
+        //We also use sha256hashing to store the password it is handled in another class named SHA256hash
         while (true){
             String  userid="";
             String password;
@@ -197,9 +218,17 @@ class SQLconnection {
             }
         }
     }
-    String returncondition(HashMap<String,String> conditionlist){
+    String returncondition(){
+        //Here we collect the user data and puts it in a dictionary first,then we loops through the dictionary
+        // add it to a list if it is not blank and use String.join with "AND" operator to get a condition, Identical to normal mysql
+        HashMap<String,String> conditionList= new HashMap<String,String>();
+        System.out.println("press q to log out, leave blank if not needed to search based on that");
+        conditionList.put("id",inputtaker("Enter the userid"));
+        conditionList.put("Name",inputtaker("Enter the name").toUpperCase());
+        conditionList.put("Department",inputtaker("Enter the Department").toUpperCase());
+        conditionList.put("Accesslevel",inputtaker("Enter Access level W/R/Nil/Full").toUpperCase());
         List<String> conditionCommand=new ArrayList<>();
-        for (Map.Entry<String,String> condition: conditionlist.entrySet()){
+        for (Map.Entry<String,String> condition: conditionList.entrySet()){
             if(!condition.getValue().isBlank()){
                 conditionCommand.add(String.format("%s = '%s'",condition.getKey(),condition.getValue()));
             }
@@ -227,13 +256,7 @@ class SQLconnection {
     }
     void searchUser(){
         System.out.println("------USER SEARCH MODE-----");
-        HashMap<String,String> conditionList= new HashMap<String,String>();
-        System.out.println("press q to log out, leave blank if not needed to search based on that");
-        conditionList.put("id",inputtaker("Enter the userid"));
-        conditionList.put("Name",inputtaker("Enter the name").toUpperCase());
-        conditionList.put("Department",inputtaker("Enter the Department").toUpperCase());
-        conditionList.put("Accesslevel",inputtaker("Enter Access level W/R/Nil/Full").toUpperCase());
-        String condition = returncondition(conditionList);
+        String condition = returncondition();
         List<HashMap<String,String>> output;
         if (condition.isEmpty()){
             output = executeReturn("select * from userdetails;");
@@ -262,6 +285,7 @@ class SQLconnection {
     }
 }
 class Info{
+    //A class to store some data so that we can change them easily
     static final String hospitalName = "AK Hospital";
 }
 class Main{
